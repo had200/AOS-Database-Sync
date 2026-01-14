@@ -1,4 +1,4 @@
-package main
+package solution
 
 import (
 	"fmt"
@@ -18,7 +18,13 @@ import (
 // TestCounterIncrement tests the counter increment scenario
 // This is the classic "lost update" problem
 func TestCounterIncrement(t *testing.T) {
-	db := NewDatabase()
+	//each time we test  with a different approach---------------------
+
+	//db := NewDatabaseMutex()    //approach 1 mutex
+	//db := NewDatabaseMonitor()  //approach 2 monitor
+	//db := NewDatabaseRWLock()   //approach 3 rwlock
+	db := NewDatabaseChannel() //approach 4 channel
+	defer db.Close()
 
 	// Initialize counter
 	tx := db.BeginTransaction()
@@ -64,7 +70,14 @@ func TestCounterIncrement(t *testing.T) {
 // TestBankTransfer tests the bank transfer scenario
 // This verifies that the total balance is preserved across transfers
 func TestBankTransfer(t *testing.T) {
-	db := NewDatabase()
+
+	//each time we test  with a different approach
+
+	//db := NewDatabaseMutex()   //apprach 1 mutex
+	//db := NewDatabaseMonitor() //apprach 2 monitor
+	//db := NewDatabaseRWLock() //apprach 3 rwlock
+	db := NewDatabaseChannel() //apprach 4 channel
+	defer db.Close()
 
 	// Initialize accounts
 	tx := db.BeginTransaction()
@@ -121,7 +134,12 @@ func TestBankTransfer(t *testing.T) {
 // TestConcurrentReadWrite tests concurrent reads and writes
 // This verifies isolation - readers should not see partial updates
 func TestConcurrentReadWrite(t *testing.T) {
-	db := NewDatabase()
+
+	//db := NewDatabaseMutex()
+	//db := NewDatabaseMonitor()
+	//db := NewDatabaseRWLock()
+	db := NewDatabaseChannel()
+	defer db.Close()
 
 	// Initialize data - both values should always be equal
 	tx := db.BeginTransaction()
@@ -205,7 +223,11 @@ func TestConcurrentReadWrite(t *testing.T) {
 
 // TestBasicOperations tests basic CRUD operations
 func TestBasicOperations(t *testing.T) {
-	db := NewDatabase()
+	//db := NewDatabaseMutex()
+	//db := NewDatabaseMonitor()
+	//db := NewDatabaseRWLock()
+	db := NewDatabaseChannel()
+	defer db.Close()
 
 	// Test Write
 	tx := db.BeginTransaction()
@@ -265,7 +287,11 @@ func TestStressTest(t *testing.T) {
 		t.Skip("Skipping stress test in short mode")
 	}
 
-	db := NewDatabase()
+	//db := NewDatabaseMutex()
+	//db := NewDatabaseMonitor()
+	//db := NewDatabaseRWLock()
+	db := NewDatabaseChannel()
+	defer db.Close()
 
 	// Initialize multiple counters
 	for i := 0; i < 10; i++ {
@@ -325,7 +351,12 @@ func TestStressTest(t *testing.T) {
 
 // BenchmarkWrites benchmarks write performance
 func BenchmarkWrites(b *testing.B) {
-	db := NewDatabase()
+
+	//db := NewDatabaseMutex()
+	//db := NewDatabaseMonitor()
+	//db := NewDatabaseRWLock()
+	db := NewDatabaseChannel()
+	defer db.Close()
 
 	b.RunParallel(func(pb *testing.PB) {
 		i := 0
@@ -340,7 +371,11 @@ func BenchmarkWrites(b *testing.B) {
 
 // BenchmarkReads benchmarks read performance
 func BenchmarkReads(b *testing.B) {
-	db := NewDatabase()
+	//db := NewDatabaseMutex()
+	//db := NewDatabaseMonitor()
+	//db := NewDatabaseRWLock()
+	db := NewDatabaseChannel()
+	defer db.Close()
 
 	// Pre-populate database
 	for i := 0; i < 100; i++ {
@@ -363,7 +398,11 @@ func BenchmarkReads(b *testing.B) {
 
 // BenchmarkMixed benchmarks mixed read/write workload
 func BenchmarkMixed(b *testing.B) {
-	db := NewDatabase()
+	//db := NewDatabaseMutex()
+	//db := NewDatabaseMonitor()
+	//db := NewDatabaseRWLock()
+	db := NewDatabaseChannel()
+	defer db.Close()
 
 	// Pre-populate database
 	for i := 0; i < 100; i++ {
@@ -392,7 +431,12 @@ func BenchmarkMixed(b *testing.B) {
 
 // BenchmarkCounterIncrement benchmarks the counter increment scenario
 func BenchmarkCounterIncrement(b *testing.B) {
-	db := NewDatabase()
+
+	//db := NewDatabaseMutex()
+	//db := NewDatabaseMonitor()
+	//db := NewDatabaseRWLock()
+	db := NewDatabaseChannel()
+	defer db.Close()
 
 	// Initialize counter
 	tx := db.BeginTransaction()
@@ -411,7 +455,12 @@ func BenchmarkCounterIncrement(b *testing.B) {
 
 // BenchmarkContentionHigh benchmarks performance under high contention
 func BenchmarkContentionHigh(b *testing.B) {
-	db := NewDatabase()
+
+	//db := NewDatabaseMutex()
+	//db := NewDatabaseMonitor()
+	//db := NewDatabaseRWLock()
+	db := NewDatabaseChannel()
+	defer db.Close()
 
 	// Initialize a single key (high contention)
 	tx := db.BeginTransaction()
